@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalPagingApi::class)
 class ChMediator(
-    private val booksApiService: RikService,
+    private val rikApiService: RikService,
     private val dataDB: AppDatabase,
     private val name: String,
     private val status: String,
@@ -61,14 +61,14 @@ class ChMediator(
         }
 
         try {
-            val apiResponse = booksApiService.getCharactersFilter(
+            val apiResponse = rikApiService.getCharactersFilter(
                 name = name,
                 status = status,
                 type=type,
                 gender = gender,
                 page = page
             )
-            val endOfPaginationReached = apiResponse.info.next.isEmpty()
+            val endOfPaginationReached = apiResponse.info.next.isNullOrEmpty()
             val chEntity = CharacnedEntity.from(apiResponse.result ?: listOf(), page)
             dataDB.withTransaction {
                 if (loadType == LoadType.REFRESH) {
@@ -87,7 +87,7 @@ class ChMediator(
                 dataDB.chDao.insert(chEntity)
             }
             return MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
-        } catch (error: HttpException) {
+        } catch (error: Exception) {
             return MediatorResult.Error(error)
         }
     }
