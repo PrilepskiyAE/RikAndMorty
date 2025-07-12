@@ -1,6 +1,8 @@
 package com.prilepskiy.prisentation.mainScreen.viewModel
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import com.prilepskiy.common.EMPTY_STRING
 import com.prilepskiy.common.subscribe
 import com.prilepskiy.domain.usecase.GetFilterChUseCase
 import com.prilepskiy.mvi.MviBaseViewModel
@@ -27,24 +29,21 @@ class MainViewModel @Inject constructor(
             is MainIntent.GetCharacned -> getCharacned()
 
 
-            is MainIntent.GetFilter -> onAction(
-                MainAction.GetFilter(
-                    intent.name,
-                    intent.status,
-                    intent.type,
-                    intent.gender
-                )
-            )
+            is MainIntent.GetFilter -> {
+                onAction(
+                    MainAction.GetFilter(
+                        intent.name,
+                        intent.status,
+                        intent.gender
+                    ))
+                getCharacned(name =intent.name, status = intent.status, intent.gender)
+            }
+
         }
     }
 
-    private fun getCharacned() {
-        getFilterChUseCase.invoke(
-            viewState.name,
-            viewState.status,
-            viewState.type,
-            viewState.gender
-        ).cachedIn(viewModelScope).subscribe(
+    private fun getCharacned(name: String = EMPTY_STRING, status: String= EMPTY_STRING, gender: String= EMPTY_STRING, type: String= EMPTY_STRING) {
+        getFilterChUseCase.invoke(name,status,gender).cachedIn(viewModelScope).subscribe(
             viewModelScope,
             onStart = {
                 MainAction.OnLoading(true)
@@ -53,6 +52,7 @@ class MainViewModel @Inject constructor(
                 onAction(MainAction.GetCharacned(it))
             },
             error = {
+                if (it.message!="HTTP 404")
                 onAction(MainAction.OnError(it.message))
             }
         )

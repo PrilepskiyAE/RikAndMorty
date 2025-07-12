@@ -16,7 +16,6 @@ interface RikService {
     suspend fun getCharactersFilter(
         @Query("name") name: String,
         @Query("status") status: String,
-        @Query("type") type: String,
         @Query("genger") gender: String,
         @Query("page") page: Int
     ): SmartResponse<CharacnedResponse>

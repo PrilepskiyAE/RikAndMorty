@@ -10,7 +10,6 @@ class MainReducer @Inject constructor() : Reducer<MainAction, MainState> {
         is MainAction.GetCharacned -> state.copy(characnedList = action.characnedList, isLoading = false)
         is MainAction.GetFilter -> state.copy(
             name = action.name,
-            type = action.type,
             gender = action.gender
         )
     }

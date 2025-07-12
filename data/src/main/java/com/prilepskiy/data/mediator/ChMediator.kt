@@ -18,7 +18,6 @@ class ChMediator(
     private val dataDB: AppDatabase,
     private val name: String,
     private val status: String,
-    private val type: String,
     private val gender: String,
 ) : RemoteMediator<Int, CharacnedEntity>() {
 
@@ -64,7 +63,6 @@ class ChMediator(
             val apiResponse = rikApiService.getCharactersFilter(
                 name = name,
                 status = status,
-                type=type,
                 gender = gender,
                 page = page
             )

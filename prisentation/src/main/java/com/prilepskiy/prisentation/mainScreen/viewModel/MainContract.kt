@@ -16,7 +16,7 @@ sealed class MainIntent : MviIntent {
 
     data class OnLoading(val isLoading: Boolean) : MainIntent()
     data class GetFilter(
-        val name: String, val status: String, val type: String, val gender: String,
+        val name: String, val status: String, val gender: String,
     ) : MainIntent()
 
 }
@@ -30,7 +30,6 @@ sealed class MainAction : MviAction {
     data class GetFilter(
         val name: String,
         val status: String,
-        val type: String,
         val gender: String,
     ) : MainAction()
 
@@ -42,7 +41,6 @@ data class MainState(
     val characnedList: PagingData<UiCharacnedModel> = PagingData.empty(),
     val name: String = EMPTY_STRING,
     val status: String = EMPTY_STRING,
-    val type: String = EMPTY_STRING,
     val gender: String = EMPTY_STRING,
     override val error: String? = null,
     override val isLoading: Boolean = false,

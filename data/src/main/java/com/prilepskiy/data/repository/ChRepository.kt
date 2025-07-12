@@ -22,7 +22,6 @@ class ChRepository @Inject constructor(
     fun getFilterCh(
         name: String,
         status: String,
-        type: String,
         gender: String,
     ): Flow<PagingData<CharacnedEntity>> {
         return Pager(
@@ -31,14 +30,9 @@ class ChRepository @Inject constructor(
                 enablePlaceholders = true
             ),
             pagingSourceFactory = {
-                dataDB.chDao.getFilterBookPagingSource(
-                    name,
-                    status,
-                    type,
-                    gender
-                )
+                dataDB.chDao.getFilterChPagingSource(name)
             },
-            remoteMediator = ChMediator(dataNetwork, dataDB, name, status, type, gender)
+            remoteMediator = ChMediator(dataNetwork, dataDB, name, status, gender)
         ).flow
     }
 
