@@ -98,6 +98,22 @@ fun MainScreen(goToUser: (Int) -> Unit, viewModel: MainViewModel = hiltViewModel
                         .padding(24.dp)
 
                 )
+                lazyPagingItems.apply {
+                    when {
+                        loadState.refresh is LoadState.Loading -> {
+                            LoadingComponent()
+                        }
+
+                        loadState.append is LoadState.Loading -> {
+                            LoadingComponent()
+                        }
+
+                        loadState.append is LoadState.Error -> {
+                            val error = loadState.append as LoadState.Error
+//                    ErrorMessageComponent(error.error.message.toString()) { retry() }
+                        }
+                    }
+                }
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
                     contentPadding = PaddingValues(12.dp),
@@ -141,22 +157,6 @@ fun MainScreen(goToUser: (Int) -> Unit, viewModel: MainViewModel = hiltViewModel
             Icon(Icons.AutoMirrored.Filled.List, contentDescription = "Фильтер")
         }
 
-        lazyPagingItems.apply {
-            when {
-                loadState.refresh is LoadState.Loading -> {
-                    LoadingComponent()
-                }
-
-                loadState.append is LoadState.Loading -> {
-                    LoadingComponent()
-                }
-
-                loadState.append is LoadState.Error -> {
-                    val error = loadState.append as LoadState.Error
-//                    ErrorMessageComponent(error.error.message.toString()) { retry() }
-                }
-            }
-        }
 
     }
 
