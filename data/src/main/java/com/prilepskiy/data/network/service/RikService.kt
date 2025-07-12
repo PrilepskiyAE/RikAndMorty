@@ -8,19 +8,18 @@ import retrofit2.http.Query
 
 interface RikService {
     @GET("api/character")
-    fun getAllCharacters(
+    suspend fun getAllCharacters(
         @Query("page") page: Int
     ): SmartResponse<CharacnedResponse>
 
     @GET("api/character")
-    fun getCharactersFilter(
+    suspend fun getCharactersFilter(
         @Query("name") name: String,
         @Query("status") status: String,
-        @Query("type") type: String,
         @Query("genger") gender: String,
         @Query("page") page: Int
     ): SmartResponse<CharacnedResponse>
 
     @GET("api/character{id}")
-    fun getCharacnedDetail(@Path("id") id: Int): CharacnedResponse
+    suspend fun getCharacnedDetail(@Path("id") id: Int): CharacnedResponse
 }

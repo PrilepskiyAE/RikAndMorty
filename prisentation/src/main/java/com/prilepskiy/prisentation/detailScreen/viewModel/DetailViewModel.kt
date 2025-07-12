@@ -1,17 +1,17 @@
-package com.prilepskiy.presentation.detailScreen.viewModel
+package com.prilepskiy.prisentation.detailScreen.viewModel
 
+import androidx.lifecycle.viewModelScope
+import com.prilepskiy.common.subscribe
+import com.prilepskiy.domain.usecase.GetChDetailUseCase
 import com.prilepskiy.mvi.MviBaseViewModel
 import com.prilepskiy.mvi.Reducer
-import com.prilepskiy.prisentation.detailScreen.viewModel.DetailAction
-import com.prilepskiy.prisentation.detailScreen.viewModel.DetailIntent
-import com.prilepskiy.prisentation.detailScreen.viewModel.DetailReducer
-import com.prilepskiy.prisentation.detailScreen.viewModel.DetailState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
     private val detailReducer: DetailReducer,
+    private val getChDetailUseCase: GetChDetailUseCase
 ) : MviBaseViewModel<DetailState, DetailAction, DetailIntent>() {
     override var reducer: Reducer<DetailAction, DetailState> = detailReducer
 
@@ -21,7 +21,19 @@ class DetailViewModel @Inject constructor(
         when (intent) {
             is DetailIntent.OnError -> onAction(DetailAction.OnError(intent.error))
             is DetailIntent.OnLoading -> onAction(DetailAction.OnLoading(intent.isLoading))
-            is DetailIntent.GetUser -> {onAction(DetailAction.GetUser(intent.userId))}
+            is DetailIntent.GetUser -> {
+                getChDetailUseCase.invoke(intent.userId).subscribe(
+                    viewModelScope,
+                    onStart = {
+                        onAction(DetailAction.OnLoading(true))
+                    }, success = {
+                        onAction(DetailAction.GetUser(it))
+                    }, error = {
+                        onAction(DetailAction.OnError(it.message))
+                    }
+                )
+
+            }
         }
     }
 }
