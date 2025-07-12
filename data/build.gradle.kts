@@ -44,6 +44,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+    implementation(libs.androidx.paging.common.android)
     testImplementation(libs.junit)
     kapt(libs.dagger.hilt.compiler)
     implementation(libs.dagger.hilt)
